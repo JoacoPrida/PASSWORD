@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Estudiante - Academia Password</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5" style="max-width: 600px;">
+        <div class="card shadow">
+            
+            <div class="card-body p-5">
+                
+                <div class="text-center mb-4">
+                    <img src="img/logo.jpg" alt="Logo Password" width="200" class="img-fluid">
+                </div>
+
+                <h3 class="text-center mb-4 text-primary">Nuevo Estudiante</h3>
+                
+                <form action="RegistrarEstudianteServlet" method="post">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nombre Completo:</label>
+                        <input type="text" name="nombre_alumno" class="form-control" required placeholder="Ej: Maria Gonzalez">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">DNI / Documento:</label>
+                        <input type="text" name="dni_alumno" class="form-control" required placeholder="Sin puntos ni guiones">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Asignar Grupo y Horario:</label>
+                        <div class="mb-3">
+                        <select name="id_grupo" class="form-select" required>
+                            <option value="" selected disabled>-- Seleccione el grupo --</option>
+                            
+                            <optgroup label="Adultos / Inicial">
+                                <option value="1">Beginners - Jueves (16:30)</option>
+                                <option value="2">PreIntermediate - Martes (16:30)</option>
+                                <option value="3">Intermediate - Lunes (18:30)</option>
+                                <option value="4">Intermediate - Martes (18:30)</option>
+                                <option value="5">Intermediate - Jueves (18:30)</option>
+                                <option value="6">UpperIntermediate - Miércoles (18:30)</option>
+                            </optgroup>
+
+                            <optgroup label="Youngsters">
+                                <option value="7">Youngster 1 - Mar y Jue (18:30)</option>
+                                <option value="8">Youngster 2 - Mar y Jue (18:30)</option>
+                                <option value="9">Youngster 3 - Lun y Mie (18:30)</option>
+                                <option value="10">Youngster 4 - Lun y Mie (16:30)</option>
+                            </optgroup>
+
+                            <optgroup label="Intermediate Teens">
+                                <option value="11">Intermediate 1 - Lun y Mie (16:30)</option>
+                                <option value="12">Intermediate 1 - Mar y Jue (16:30)</option>
+                                <option value="13">Intermediate 2 - Lun y Mie (16:30)</option>
+                                <option value="14">Intermediate 2 - Mar y Jue (16:30)</option>
+                            </optgroup>
+
+                            <optgroup label="Exámenes (First)">
+                                <option value="15">First Certificate - Lun y Mie (16:30)</option>
+                                <option value="16">First Certificate - Lun y Mie (18:30)</option>
+                                <option value="17">First Certificate - Mar y Jue (16:30)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono:</label>
+                        <input type="text" name="telefono_alumno" class="form-control" placeholder="Solo números">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Edad:</label>
+                        <input type="number" name="edad_alumno" class="form-control" required placeholder="Ej: 25">
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Guardar Estudiante</button>
+                    </div>
+                    
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
