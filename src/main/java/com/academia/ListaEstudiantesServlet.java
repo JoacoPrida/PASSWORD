@@ -18,7 +18,6 @@ public class ListaEstudiantesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // Configuración de codificación
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
@@ -29,8 +28,6 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("</head><body class='bg-light'>");
 
         out.println("<div class='container mt-4'>");
-        
-        // Título y Botón
         out.println("<div class='d-flex justify-content-between align-items-center mb-4'>");
         out.println("<h2>📋 Planilla de Alumnos</h2>");
         out.println("<a href='registro.html' class='btn btn-success'>+ Nuevo Alumno</a>");
@@ -40,22 +37,20 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("<div class='card-body p-0'>"); 
         out.println("<div class='table-responsive'>"); 
         
-        // --- CORRECCIÓN DE COLUMNAS ---
         out.println("<table class='table table-striped table-hover mb-0'>");
         out.println("<thead class='table-dark'><tr>");
         out.println("<th>ID</th>");
         out.println("<th>Nombre</th>");
-        out.println("<th>DNI</th>");
-        out.println("<th>Grupo (Info)</th>"); // Aquí va todo junto
-        out.println("<th>Tel&eacute;fono</th>"); // CORREGIDO: Teléfono en su lugar
+        out.println("<th>Grupo / Horario</th>");
+        out.println("<th>Teléfono</th>");
+        out.println("<th class='text-center'>Acciones</th>"); // <--- NUEVA COLUMNA
         out.println("</tr></thead>");
         out.println("<tbody>");
 
         try {
             Connection con = Conexion.getConexion();
-            
-            // Traemos el nombre del grupo, los días y el horario
-            String sql = "SELECT e.id, e.nombre, e.dni, e.telefono, g.nombre AS nombre_grupo, g.dias, g.horario " +
+            // Traemos datos
+            String sql = "SELECT e.id, e.nombre, e.telefono, g.nombre AS nombre_grupo, g.dias, g.horario " +
                          "FROM estudiantes e " +
                          "JOIN grupos g ON e.id_grupo = g.id_grupo " +
                          "ORDER BY e.id DESC"; 
@@ -64,28 +59,33 @@ public class ListaEstudiantesServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                out.println("<tr>");
-                out.println("<td>" + rs.getInt("id") + "</td>");
-                out.println("<td class='fw-bold'>" + rs.getString("nombre") + "</td>");
-                out.println("<td>" + rs.getString("dni") + "</td>");
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
                 
-                // Info del Grupo combinada (Nombre + Horario pequeño abajo)
+                out.println("<tr>");
+                out.println("<td>" + id + "</td>");
+                out.println("<td class='fw-bold'>" + nombre + "</td>");
+                
                 String infoGrupo = rs.getString("nombre_grupo") + " <br><small class='text-muted'>" + rs.getString("dias") + " " + rs.getString("horario") + "</small>";
                 out.println("<td>" + infoGrupo + "</td>");
-                
-                // El teléfono cae en la columna correcta ahora (la 5ta)
                 out.println("<td>" + rs.getString("telefono") + "</td>");
+                
+                // --- BOTONES DE ACCIÓN ---
+                out.println("<td class='text-center'>");
+                // Botón Editar (Lleva a la pantalla de edición con el ID del alumno)
+                out.println("<a href='editar?id=" + id + "' class='btn btn-sm btn-primary me-2'>✏️ Editar</a>");
+                // Botón Eliminar (Pide confirmación antes de borrar)
+                out.println("<a href='eliminar?id=" + id + "' class='btn btn-sm btn-danger' onclick='return confirm(\"¿Seguro que quieres borrar a " + nombre + "?\")'>🗑️</a>");
+                out.println("</td>");
                 out.println("</tr>");
             }
-            
             con.close();
 
         } catch (SQLException e) {
-            out.println("<tr><td colspan='5' class='text-danger text-center'>Error: " + e.getMessage() + "</td></tr>");
+            out.println("<tr><td colspan='5' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
         }
 
         out.println("</tbody></table>");
-        out.println("</div></div></div>"); 
-        out.println("</div></body></html>");
+        out.println("</div></div></div></div></body></html>");
     }
 }
