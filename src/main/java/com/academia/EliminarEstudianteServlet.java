@@ -20,11 +20,20 @@ public class EliminarEstudianteServlet extends HttpServlet {
         if(idStr != null) {
             try {
                 Connection con = Conexion.getConexion();
-                String sql = "DELETE FROM estudiantes WHERE id = ?";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ps.setInt(1, Integer.parseInt(idStr));
-                
-                ps.executeUpdate();
+                int idAlumno = Integer.parseInt(idStr);
+
+                // PASO 1: Borrar primero el historial de pagos (para evitar error de Foreign Key)
+                String sqlPagos = "DELETE FROM pagos WHERE id_estudiante = ?";
+                PreparedStatement psPagos = con.prepareStatement(sqlPagos);
+                psPagos.setInt(1, idAlumno);
+                psPagos.executeUpdate();
+
+                // PASO 2: Ahora sí, borrar al estudiante
+                String sqlEstudiante = "DELETE FROM estudiantes WHERE id = ?";
+                PreparedStatement psEst = con.prepareStatement(sqlEstudiante);
+                psEst.setInt(1, idAlumno);
+                psEst.executeUpdate();
+
                 con.close();
             } catch (Exception e) {
                 e.printStackTrace();

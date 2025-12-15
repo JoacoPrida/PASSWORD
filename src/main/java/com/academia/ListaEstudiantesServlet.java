@@ -45,7 +45,8 @@ public class ListaEstudiantesServlet extends HttpServlet {
         // ENCABEZADO
         out.println("<div class='d-flex justify-content-between align-items-center mb-3'>");
         out.println("<h2>&#128176; Alumnos (" + anioActual + ")</h2>");
-        out.println("<a href='registro.html' class='btn btn-success'>+ Nuevo</a>");
+        // CAMBIO: Ahora apuntamos al servlet dinámico, no al html estático
+        out.println("<a href='formulario-registro' class='btn btn-success'>+ Nuevo</a>"); 
         out.println("</div>");
 
         // --- BARRA DE BÚSQUEDA (NUEVO) ---

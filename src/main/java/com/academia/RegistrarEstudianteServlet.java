@@ -123,7 +123,7 @@ public class RegistrarEstudianteServlet extends HttpServlet {
         out.println("<div class='card shadow p-5 text-center' style='max-width: 500px;'>");
         out.println("<h1 class='text-success mb-4'>¡Éxito!</h1>");
         out.println("<p class='fs-4'>El estudiante <b>" + nombre + "</b><br>ha sido registrado correctamente.</p>");
-        out.println("<a href='registro.html' class='btn btn-primary mt-3'>Registrar Nuevo Alumno</a>");
+        out.println("<a href='formulario-registro' class='btn btn-primary mt-3'>Registrar Nuevo Alumno</a>");
         out.println("<a href='lista' class='btn btn-outline-dark mt-3 d-block'>Ver Planilla</a>");
         out.println("</div></body></html>");
     }
@@ -137,7 +137,7 @@ public class RegistrarEstudianteServlet extends HttpServlet {
         out.println("<h1 class='display-1 text-danger'>&#9888;</h1>"); 
         out.println("<h2 class='text-danger mb-3'>" + titulo + "</h2>");
         out.println("<p class='fs-5'>" + mensaje + "</p>");
-        out.println("<a href='registro.html' class='btn btn-secondary mt-3'>Volver al formulario</a>");
+        out.println("<a href='formulario-registro' class='btn btn-secondary mt-3'>Volver al formulario</a>");
         out.println("</div></body></html>");
     }
 }
