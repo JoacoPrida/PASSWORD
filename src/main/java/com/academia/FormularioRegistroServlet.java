@@ -30,9 +30,20 @@ public class FormularioRegistroServlet extends HttpServlet {
         out.println("<div class='container mt-5' style='max-width: 600px;'>");
         out.println("<div class='card shadow'><div class='card-body p-5'>");
         
-        out.println("<div class='text-center mb-4'>");
+        // --- CAMBIO: FOTOS A LOS COSTADOS DEL LOGO ---
+        out.println("<div class='d-flex justify-content-center align-items-center mb-4 gap-3'>");
+        
+        // Foto Izquierda
+        out.println("<img src='img/fotoMa.jpg' width='100' class='rounded shadow' alt='Foto'>"); 
+        
+        // Logo Central
         out.println("<img src='img/logo.jpg' alt='Logo Password' width='200' class='img-fluid'>");
+        
+        // Foto Derecha
+        out.println("<img src='img/fotoMa.jpg' width='100' class='rounded shadow' alt='Foto'>");
+        
         out.println("</div>");
+        // ---------------------------------------------
 
         out.println("<h3 class='text-center mb-4 text-primary'>Nuevo Estudiante</h3>");
         
@@ -74,6 +85,15 @@ public class FormularioRegistroServlet extends HttpServlet {
 
         out.println("<div class='mb-3'><label class='form-label'>Edad (Opcional):</label>");
         out.println("<input type='number' name='edad_alumno' class='form-control' placeholder='Ej: 25'></div>");
+        
+        out.println("<div class='mb-3'><label class='form-label'>Colegio / Escuela:</label>");
+        out.println("<input type='text' name='colegio' class='form-control' placeholder='Nombre del colegio'></div>");
+
+        out.println("<div class='mb-3'><label class='form-label'>Grado / Año:</label>");
+        out.println("<input type='text' name='grado_anio' class='form-control' placeholder='Ej: 4to Grado, 5to Año'></div>");
+
+        out.println("<div class='mb-3'><label class='form-label'>Descripción / Observaciones:</label>");
+        out.println("<textarea name='descripcion' class='form-control' rows='3' placeholder='Comentarios adicionales...'></textarea></div>");
 
         out.println("<div class='d-grid gap-2 mt-4'>");
         out.println("<button type='submit' class='btn btn-primary btn-lg'>Guardar Estudiante</button>");

@@ -31,7 +31,12 @@ public class RegistrarEstudianteServlet extends HttpServlet {
         String edadTexto = request.getParameter("edad_alumno"); 
         String idGrupoTexto = request.getParameter("id_grupo");
 
-        // 2. CONVERSIÓN SEGURA (Aquí estaba el problema)
+        // --- NUEVOS CAMPOS ---
+        String colegio = request.getParameter("colegio");
+        String gradoAnio = request.getParameter("grado_anio");
+        String descripcion = request.getParameter("descripcion");
+
+        // 2. CONVERSIÓN SEGURA
         int idGrupo = 0;
         int edad = 0; // Por defecto asumimos 0 si no escriben nada
 
@@ -54,6 +59,11 @@ public class RegistrarEstudianteServlet extends HttpServlet {
                 edad = 0; // Si escriben letras o error, lo dejamos en 0
             }
         }
+        
+        // C) Limpiar nulos para los campos de texto opcionales
+        if (colegio == null) colegio = "";
+        if (gradoAnio == null) gradoAnio = "";
+        if (descripcion == null) descripcion = "";
 
         // 3. EL PORTERO (Validar Cupo)
         if (!hayCupoDisponible(idGrupo)) {
@@ -64,14 +74,21 @@ public class RegistrarEstudianteServlet extends HttpServlet {
         // 4. GUARDAR EN LA BASE DE DATOS
         try {
             Connection con = Conexion.getConexion();
-            String sql = "INSERT INTO estudiantes (nombre, dni, telefono, edad, id_grupo) VALUES (?, ?, ?, ?, ?)";
+            
+            // SQL ACTUALIZADO CON LOS NUEVOS CAMPOS
+            String sql = "INSERT INTO estudiantes (nombre, dni, telefono, edad, id_grupo, colegio, grado_anio, descripcion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, nombre);
             ps.setString(2, dni);
             ps.setString(3, telefono);
-            ps.setInt(4, edad); // Aquí guardará el número o un 0
+            ps.setInt(4, edad); 
             ps.setInt(5, idGrupo);
+            
+            // Asignamos los nuevos valores
+            ps.setString(6, colegio);
+            ps.setString(7, gradoAnio);
+            ps.setString(8, descripcion);
             
             ps.executeUpdate();
             con.close();

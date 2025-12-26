@@ -42,12 +42,28 @@ public class ListaEstudiantesServlet extends HttpServlet {
 
         out.println("<div class='container mt-4'>");
         
-        // ENCABEZADO
+       // ENCABEZADO
         out.println("<div class='d-flex justify-content-between align-items-center mb-3'>");
-        out.println("<h2>&#128176; Alumnos (" + anioActual + ")</h2>");
-        // CAMBIO: Ahora apuntamos al servlet dinámico, no al html estático
-        out.println("<a href='formulario-registro' class='btn btn-success'>+ Nuevo</a>"); 
+        out.println("<div>");
+        
+        // --- CAMBIO: TÍTULO CON FOTO AL LADO ---
+        out.println("<div class='d-flex align-items-center'>");
+        out.println("<h2>&#128176; Planilla General</h2>");
+        // Foto pequeña (width='60') y separada un poco a la izquierda (ms-3)
+        out.println("<img src='img/fotoMa.jpg' width='60' class='rounded ms-3 shadow-sm' alt='Foto'>");
         out.println("</div>");
+        // ---------------------------------------
+
+        out.println("<div class='btn-group mt-1'>");
+        out.println("<a href='lista' class='btn btn-primary btn-sm disabled'>Ver Lista Completa</a>");
+        out.println("<a href='ver-grupos' class='btn btn-outline-primary btn-sm'>Ver por Grupos</a>");
+        out.println("</div>");
+        out.println("</div>");
+
+        // Botón Nuevo Alumno (sin cambios)
+        out.println("<a href='formulario-registro' class='btn btn-success'>+ Nuevo Alumno</a>");
+        out.println("</div>");
+
 
         // --- BARRA DE BÚSQUEDA (NUEVO) ---
         out.println("<div class='card mb-3 shadow-sm'>");
