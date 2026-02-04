@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/formulario-registro")
 public class FormularioRegistroServlet extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -21,7 +23,7 @@ public class FormularioRegistroServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        // COPIAMOS EL HTML ORIGINAL PERO AHORA DENTRO DE JAVA
+        // 1. CABECERA HTML
         out.println("<!DOCTYPE html><html lang='es'><head>");
         out.println("<meta charset='UTF-8'><title>Registro de Estudiante</title>");
         out.println("<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>");
@@ -30,23 +32,16 @@ public class FormularioRegistroServlet extends HttpServlet {
         out.println("<div class='container mt-5' style='max-width: 600px;'>");
         out.println("<div class='card shadow'><div class='card-body p-5'>");
         
-        // --- CAMBIO: FOTOS A LOS COSTADOS DEL LOGO ---
+        // 2. FOTOS Y LOGO
         out.println("<div class='d-flex justify-content-center align-items-center mb-4 gap-3'>");
-        
-        // Foto Izquierda
         out.println("<img src='img/fotoMa.jpg' width='100' class='rounded shadow' alt='Foto'>"); 
-        
-        // Logo Central
         out.println("<img src='img/logo.jpg' alt='Logo Password' width='200' class='img-fluid'>");
-        
-        // Foto Derecha
         out.println("<img src='img/fotoMa.jpg' width='100' class='rounded shadow' alt='Foto'>");
-        
         out.println("</div>");
-        // ---------------------------------------------
 
         out.println("<h3 class='text-center mb-4 text-primary'>Nuevo Estudiante</h3>");
         
+        // 3. FORMULARIO
         out.println("<form action='RegistrarEstudianteServlet' method='post'>");
         
         out.println("<div class='mb-3'><label class='form-label'>Nombre Completo:</label>");
@@ -55,30 +50,44 @@ public class FormularioRegistroServlet extends HttpServlet {
         out.println("<div class='mb-3'><label class='form-label'>DNI / Documento:</label>");
         out.println("<input type='text' name='dni_alumno' class='form-control' required placeholder='Sin puntos'></div>");
 
-        // --- AQUÍ OCURRE LA MAGIA DINÁMICA ---
+        // --- AQUÍ ESTÁ EL ARREGLO DE LA LISTA DE GRUPOS ---
         out.println("<div class='mb-3'><label class='form-label'>Asignar Grupo y Horario:</label>");
         out.println("<select name='id_grupo' class='form-select' required>");
         out.println("<option value='' selected disabled>-- Seleccione el grupo --</option>");
         
+        Connection con = null;
         try {
-            Connection con = Conexion.getConexion();
-            // Traemos los grupos y también el nombre del aula para mostrarlo
-            String sql = "SELECT g.*, a.nombre as n_aula FROM grupos g JOIN aulas a ON g.id_aula = a.id_aula ORDER BY g.nombre";
+            con = Conexion.getConexion();
+            // CAMBIO CLAVE: Usamos LEFT JOIN para que traiga los grupos aunque no tengan aula asignada
+            // Y usamos IFNULL para que no falle si el aula no tiene nombre
+            String sql = "SELECT g.id_grupo, g.nombre, g.dias, g.horario, IFNULL(a.nombre, 'Sin Aula') as n_aula " +
+                         "FROM grupos g LEFT JOIN aulas a ON g.id_aula = a.id_aula " +
+                         "ORDER BY g.nombre";
+                         
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             
+            boolean hayGrupos = false;
             while(rs.next()){
-                // Creamos una <option> por cada grupo en la base de datos
-                String textoOpcion = rs.getString("nombre") + " - " + rs.getString("dias") + " (" + rs.getString("horario") + ") [" + rs.getString("n_aula") + "]";
+                hayGrupos = true;
+                String textoOpcion = rs.getString("nombre") + " - " + rs.getString("dias") + 
+                                   " (" + rs.getString("horario") + ") [" + rs.getString("n_aula") + "]";
                 out.println("<option value='" + rs.getInt("id_grupo") + "'>" + textoOpcion + "</option>");
             }
-            con.close();
+            
+            if (!hayGrupos) {
+                out.println("<option disabled>No se encontraron grupos en la Base de Datos</option>");
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
+            out.println("<option disabled>Error cargando grupos: " + e.getMessage() + "</option>");
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) {}
         }
         
         out.println("</select></div>");
-        // ----------------------------------------
+        // ---------------------------------------------------
 
         out.println("<div class='mb-3'><label class='form-label'>Teléfono:</label>");
         out.println("<input type='text' name='telefono_alumno' class='form-control' placeholder='Solo números'></div>");
@@ -99,17 +108,11 @@ public class FormularioRegistroServlet extends HttpServlet {
         out.println("<button type='submit' class='btn btn-primary btn-lg'>Guardar Estudiante</button>");
         out.println("</div></form>");
 
-        // --- BOTONES DE PIE DE PÁGINA (AQUÍ ESTÁ TU PEDIDO) ---
+        // 4. BOTONES INFERIORES
         out.println("<div class='mt-4 text-center border-top pt-3 d-flex justify-content-between'>");
-        
-        // Botón 1: Ver Lista
         out.println("<a href='lista' class='btn btn-outline-dark'>&#128203; Ver Planilla</a>");
-        
-        // Botón 2: Configurar Grupos (EL NUEVO)
         out.println("<a href='configuracion' class='btn btn-outline-secondary'>&#9881; Parametros / Grupos</a>");
-        
         out.println("</div>");
-        // -----------------------------------------------------
 
         out.println("</div></div></div></body></html>");
     }
