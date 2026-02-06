@@ -69,7 +69,6 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("<div class='card mb-3 shadow-sm'>");
         out.println("<div class='card-body py-2'>");
         out.println("<form action='lista' method='get' class='d-flex gap-2'>");
-        
         // El input mantiene el valor escrito (value) para que no se borre al buscar
         String valorInput = hayBusqueda ? busqueda : "";
         out.println("<input class='form-control' type='search' name='busqueda' placeholder='Buscar por nombre...' value='" + valorInput + "'>");

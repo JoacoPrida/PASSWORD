@@ -61,9 +61,7 @@
 
                 </div>
 
-                <div class="mt-5">
-                    <p class="text-muted">Tip: Los enlaces se abrirán en una pestaña nueva para que no pierdas el sistema.</p>
-                </div>
+                
             </div>
         </div>
     </div>
