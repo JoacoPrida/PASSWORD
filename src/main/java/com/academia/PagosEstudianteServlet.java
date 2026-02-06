@@ -113,6 +113,7 @@ public class PagosEstudianteServlet extends HttpServlet {
         
         out.println("<p class='text-center mb-2'>Mes: <strong id='txtMesModal' class='text-primary'></strong></p>");
         
+        // CAMPO MONTO (YA NO TIENE 'REQUIRED')
         out.println("<div class='mb-3'>");
         out.println("<label class='form-label small'>Monto Abonado ($):</label>");
         out.println("<input type='number' name='monto' class='form-control form-control-lg' placeholder='0'>");
@@ -173,7 +174,13 @@ public class PagosEstudianteServlet extends HttpServlet {
             out.println("<div class='card-body text-center p-2'>");
             out.println(esEspecial ? "<h6>&#9733; " + titulo + "</h6>" : "<h6>" + titulo + "</h6>");
             
-            out.println("<h4 class='my-2'>$" + (int)montoPagado + "</h4>");
+            // Si el monto es 0, no mostramos "$0", solo la fecha
+            if (montoPagado > 0) {
+                out.println("<h4 class='my-2'>$" + (int)montoPagado + "</h4>");
+            } else {
+                out.println("<h4 class='my-2'>-</h4>");
+            }
+            
             out.println("<span class='badge bg-light text-dark bg-opacity-75'>" + fechaPagado + "</span>");
             
             out.println("<form action='pagos' method='post' class='mt-2'>");
@@ -218,7 +225,20 @@ public class PagosEstudianteServlet extends HttpServlet {
             Connection con = Conexion.getConexion();
             
             if ("registrar".equals(accion)) {
-                double monto = Double.parseDouble(request.getParameter("monto"));
+                
+                // LÓGICA DE MONTO OPCIONAL
+                String montoStr = request.getParameter("monto");
+                double monto = 0;
+                
+                // Si escribieron algo, lo convertimos a número. Si está vacío, queda en 0.
+                if (montoStr != null && !montoStr.isEmpty()) {
+                    try {
+                        monto = Double.parseDouble(montoStr);
+                    } catch (NumberFormatException e) {
+                        monto = 0;
+                    }
+                }
+                
                 String fechaManual = request.getParameter("fecha_pago"); 
                 
                 String sql = "INSERT INTO pagos (id_estudiante, mes, anio, monto, fecha_pago) " +
