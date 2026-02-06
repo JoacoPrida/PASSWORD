@@ -115,7 +115,7 @@ public class PagosEstudianteServlet extends HttpServlet {
         
         out.println("<div class='mb-3'>");
         out.println("<label class='form-label small'>Monto Abonado ($):</label>");
-        out.println("<input type='number' name='monto' class='form-control form-control-lg' placeholder='0' required>");
+        out.println("<input type='number' name='monto' class='form-control form-control-lg' placeholder='0'>");
         out.println("</div>");
 
         // CAMPO FECHA
