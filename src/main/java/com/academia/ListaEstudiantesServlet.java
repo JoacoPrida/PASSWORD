@@ -59,7 +59,7 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("<a href='ver-grupos' class='btn btn-outline-primary btn-sm'>Ver por Grupos</a>");
         out.println("</div>");
         out.println("</div>");
-
+        out.println("<a href='links.jsp' class='btn btn-warning text-dark fw-bold'>&#11088; Links Útiles</a>");
         // Botón Nuevo Alumno (sin cambios)
         out.println("<a href='formulario-registro' class='btn btn-success'>+ Nuevo Alumno</a>");
         out.println("</div>");
