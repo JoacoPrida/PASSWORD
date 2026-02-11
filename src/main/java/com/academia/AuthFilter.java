@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-// Este filtro protege TODO (/*)
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 
@@ -23,27 +22,29 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         
-        // Obtenemos la URL que están intentando visitar
+        // 1. Obtenemos la URL actual
         String path = req.getRequestURI();
         
-        // Obtenemos la sesión actual (si existe)
+        // 2. Verificamos la sesión
         HttpSession session = req.getSession(false);
         boolean estaLogueado = (session != null && session.getAttribute("usuarioLogueado") != null);
 
-        // --- REGLAS DEL GUARDIA ---
+        // --- REGLAS DEL GUARDIA (CORREGIDAS) ---
         
-        // 1. Dejar pasar si quiere entrar al Login (si no, hacemos un bucle infinito)
-        boolean esLogin = path.endsWith("login.jsp") || path.endsWith("login");
+        // CAMBIO IMPORTANTE: Usamos .contains() en vez de .endsWith()
+        // Esto evita que el filtro bloquee la URL si Java le agrega ";jsessionid=..."
+        boolean esLogin = path.contains("login");
         
-        // 2. Dejar pasar archivos estáticos (imágenes, CSS) para que se vea bonito
+        // Dejamos pasar recursos estáticos (imágenes, css, bootstrap)
         boolean esRecurso = path.contains("/img/") || path.contains("/css/") || path.contains("bootstrap");
 
+        // LÓGICA FINAL
         if (estaLogueado || esLogin || esRecurso) {
             // ¡Pase usted!
             chain.doFilter(request, response);
         } else {
-            // ¡ALTO! Usted no tiene permiso. Vaya al login.
-            res.sendRedirect(req.getContextPath() + "/login");
+            // Si no cumple nada, lo mandamos al login
+            res.sendRedirect(req.getContextPath() + "/login.jsp");
         }
     }
 
