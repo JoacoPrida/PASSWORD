@@ -118,7 +118,11 @@ public class ListaGruposServlet extends HttpServlet {
         }
 
         out.println("</div>"); // Fin accordion container
-        out.println("<div class='mt-4 text-center'><a href='formulario-registro' class='btn btn-success'>+ Nuevo Alumno</a></div>");
+        // Creamos un contenedor centrado con espacio entre los botones (gap-3)
+        out.println("<div class='mt-4 text-center d-flex justify-content-center gap-3'>");
+        out.println("<a href='configuracion' class='btn btn-outline-secondary fw-bold'>&#9881; Parámetros / Grupos</a>");
+        out.println("<a href='formulario-registro' class='btn btn-success fw-bold'>+ Nuevo Alumno</a>");
+        out.println("</div>");
         out.println("</div></body></html>");
     }
 }

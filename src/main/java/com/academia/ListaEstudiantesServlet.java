@@ -59,9 +59,12 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("<a href='ver-grupos' class='btn btn-outline-primary btn-sm'>Ver por Grupos</a>");
         out.println("</div>");
         out.println("</div>");
+        // Envolvemos los botones en un div para que queden prolijos y con separación (gap-2)
+        out.println("<div class='d-flex gap-2 align-items-center'>");
+        out.println("<a href='configuracion' class='btn btn-outline-secondary fw-bold'>&#9881; Parámetros / Grupos</a>");
         out.println("<a href='links.jsp' class='btn btn-warning text-dark fw-bold'>&#11088; Links Útiles</a>");
-        // Botón Nuevo Alumno (sin cambios)
-        out.println("<a href='formulario-registro' class='btn btn-success'>+ Nuevo Alumno</a>");
+        out.println("<a href='formulario-registro' class='btn btn-success fw-bold'>+ Nuevo Alumno</a>");
+        out.println("</div>");
         out.println("</div>");
 
 
