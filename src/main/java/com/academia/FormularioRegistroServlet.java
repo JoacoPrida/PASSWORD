@@ -48,7 +48,7 @@ public class FormularioRegistroServlet extends HttpServlet {
         out.println("<input type='text' name='nombre_alumno' class='form-control' required placeholder='Ej: Joaquin Prida'></div>");
 
         out.println("<div class='mb-3'><label class='form-label'>DNI / Documento:</label>");
-        out.println("<input type='text' name='dni_alumno' class='form-control' required placeholder='Sin puntos'></div>");
+        out.println("<input type='text' name='dni_alumno' class='form-control' placeholder='Sin puntos'></div>");
 
         // --- AQUÍ ESTÁ EL ARREGLO DE LA LISTA DE GRUPOS ---
         out.println("<div class='mb-3'><label class='form-label'>Asignar Grupo y Horario:</label>");
