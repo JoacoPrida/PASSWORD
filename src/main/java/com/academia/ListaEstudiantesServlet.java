@@ -18,6 +18,27 @@ public class ListaEstudiantesServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+                // --- 1. DECLARACIÓN Y CONSULTA (Pegar esto al principio del doGet) ---
+            int totalAlumnos = 0;
+            try {
+                // Abrimos una conexión rápida para el contador
+                java.sql.Connection conAux = Conexion.getConexion();
+                String sqlCount = "SELECT COUNT(*) FROM estudiantes";
+                java.sql.PreparedStatement psCount = conAux.prepareStatement(sqlCount);
+                java.sql.ResultSet rsCount = psCount.executeQuery();
+                
+                if (rsCount.next()) {
+                    totalAlumnos = rsCount.getInt(1);
+                }
+                
+                // Cerramos los recursos de esta consulta
+                rsCount.close();
+                psCount.close();
+                conAux.close();
+            } catch (Exception e) {
+                e.printStackTrace(); // Esto te ayuda a ver si hay error en la consola de Railway
+            }
+        
         
         // 1. CONFIGURACIÓN BÁSICA
         response.setContentType("text/html;charset=UTF-8");
@@ -56,8 +77,16 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("</div>");
         out.println("</div>");
 
+
+
+        
         out.println("<div class='d-flex gap-2 align-items-center'>");
         out.println("<a href='configuracion' class='btn btn-outline-secondary fw-bold'>&#9881; Parámetros / Grupos</a>");
+        out.println("<div class='me-2'>");
+        out.println("  <span class='badge bg-dark text-white p-2 shadow-sm' style='font-size: 0.9rem;'>");
+        out.println("    &#128101; Total: <strong>" + totalAlumnos + "</strong>");
+        out.println("  </span>");
+        out.println("</div>");
         out.println("<a href='links.jsp' class='btn btn-warning text-dark fw-bold'>&#11088; Links Útiles</a>");
         out.println("<a href='formulario-registro' class='btn btn-success fw-bold'>+ Nuevo Alumno</a>");
         out.println("</div>");
@@ -87,10 +116,10 @@ public class ListaEstudiantesServlet extends HttpServlet {
         out.println("<th class='text-center'>Acciones</th>");
         out.println("</tr></thead><tbody>");
 
-        try {
-            Connection con = Conexion.getConexion();
-            
+
             // SQL CON DOBLE SUBCONSULTA (MESES Y MATRÍCULA)
+            Connection con = Conexion.getConexion();
+            try {
             String sql = "SELECT e.id, e.nombre, e.fecha_inscripcion, g.nombre AS nombre_grupo, " +
                          "(SELECT COUNT(*) FROM pagos p WHERE p.id_estudiante = e.id AND p.anio = ? AND p.mes >= 1 AND p.mes <= 13) as pagos_hechos, " + 
                          "(SELECT COUNT(*) FROM pagos p WHERE p.id_estudiante = e.id AND p.anio = ? AND p.mes = 0) as matricula_pagada " +
@@ -183,6 +212,8 @@ public class ListaEstudiantesServlet extends HttpServlet {
             if (!hayResultados) {
                 out.println("<tr><td colspan='4' class='text-center py-4 text-muted'>No se encontraron alumnos.</td></tr>");
             }
+            rs.close();
+            ps.close();
             con.close();
 
         } catch (SQLException e) {
@@ -191,4 +222,5 @@ public class ListaEstudiantesServlet extends HttpServlet {
 
         out.println("</tbody></table></div></div></div></div></body></html>");
     }
+
 }
